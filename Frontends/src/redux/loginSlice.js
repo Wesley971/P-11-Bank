@@ -32,4 +32,4 @@ export const loginSlice = createSlice({
 
 export const { loginUser, logoutUser, infoUser, infoUserName } = loginSlice.actions;
 
-export default loginSlice.reducer;
+export default loginSlice;
