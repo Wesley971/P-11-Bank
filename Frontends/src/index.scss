@@ -1,6 +1,7 @@
-@use"./components/sass/reset.scss";
+@use"./components/reset/reset.scss";
 @use"./components/Footer/Footer";
 @use"./components/Header/Header";
 @use"./components/Features/Features";
 @use"./components/Hero/Hero";
 @use"./components/Navigation/Navigation";
+@use"./components/SignIn/SignIn";
