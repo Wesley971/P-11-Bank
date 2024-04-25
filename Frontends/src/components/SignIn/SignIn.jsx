@@ -1,9 +1,8 @@
-import  { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import Button from "../Button/Button";
-import { loginUser, infoUser } from "../../redux/loginSlice";
-// import { logUser, getUserProfile } from "../../core/api";
+import { loginUserAsync } from "../../redux/loginSlice";
 
 const SignIn = () => {
   const [formData, setFormData] = useState({ email: "", password: "", staySignedIn: false });
@@ -19,13 +18,16 @@ const SignIn = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const userData = await (formData.email, formData.password);
-      const token = userData.body.token;
-      await dispatch(loginUser(token));
-      if (formData.staySignedIn) localStorage.setItem("token", token);
-      const userInfo = await (token);
-      await dispatch(infoUser(userInfo.body));
-      navigate("/user");
+      // Dispatch de l'action asynchrone pour la connexion de l'utilisateur
+      const userData = await dispatch(loginUserAsync(formData));
+      
+      // Gestion de la réponse de l'action asynchrone
+      if (userData.payload.token) {
+        if (formData.staySignedIn) localStorage.setItem("token", userData.payload.token);
+        navigate("/user");
+      } else {
+        setError("Identifiants incorrects");
+      }
     } catch (error) {
       console.error("Erreur lors de la connexion:", error);
       setError("Identifiants incorrects");
@@ -66,7 +68,7 @@ const SignIn = () => {
               type="checkbox"
               id="remember-me"
               name="rememberMe"
-              checked={formData.rememberMe}
+              checked={formData.staySignedIn}
               onChange={handleChange}
             />
             <label htmlFor="remember-me">Remember me</label>
