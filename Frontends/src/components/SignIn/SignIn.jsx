@@ -20,7 +20,7 @@ const SignIn = () => {
     try {
       // Dispatch de l'action asynchrone pour la connexion de l'utilisateur
       const userData = await dispatch(loginUserAsync(formData));
-      
+      console.log(formData);
       // Gestion de la réponse de l'action asynchrone
       if (userData.payload.token) {
         if (formData.staySignedIn) localStorage.setItem("token", userData.payload.token);

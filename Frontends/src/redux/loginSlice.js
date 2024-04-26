@@ -1,28 +1,40 @@
-// Dans votre fichier loginSlice.js
+// loginSlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { logUser, getUserProfile, changeUsername } from "../components/Api/Api";
 
-// Créez une thunk asynchrone pour la connexion de l'utilisateur
+// Thunk asynchrone pour la connexion de l'utilisateur
 export const loginUserAsync = createAsyncThunk(
   'login/loginUserAsync',
-  async (userData) => {
-    // Effectuez votre requête HTTP pour la connexion de l'utilisateur ici
-    const response = await fetch("http://localhost:3001/api/v1/user/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(userData),
-    });
-    const data = await response.json();
-    return data; // Vous pouvez retourner les données reçues de la requête
+  async ({ email, password }) => {
+    const userData = await logUser(email, password);
+    return userData;
   }
 );
 
+// Thunk asynchrone pour récupérer le profil utilisateur
+export const fetchUserProfileAsync = createAsyncThunk(
+  'login/fetchUserProfileAsync',
+  async (token) => {
+    const userProfile = await getUserProfile(token);
+    return userProfile;
+  }
+);
+
+// Thunk asynchrone pour modifier le nom d'utilisateur
+export const changeUsernameAsync = createAsyncThunk(
+  'login/changeUsernameAsync',
+  async ({ newUserName, token }) => {
+    const updatedProfile = await changeUsername(newUserName, token);
+    return updatedProfile;
+  }
+);
+
+// Définition du slice Redux
 export const loginSlice = createSlice({
   name: "login",
   initialState: {
     userToken: null,
-    userProfil: null,
+    userProfile: null,
     loading: false,
     error: null,
   },
@@ -57,16 +69,39 @@ export const loginSlice = createSlice({
       .addCase(loginUserAsync.fulfilled, (state, action) => {
         state.loading = false;
         state.userToken = action.payload.token;
-        state.userProfil = action.payload.userProfil;
       })
       .addCase(loginUserAsync.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(fetchUserProfileAsync.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchUserProfileAsync.fulfilled, (state, action) => {
+        state.loading = false;
+        state.userProfile = action.payload;
+      })
+      .addCase(fetchUserProfileAsync.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(changeUsernameAsync.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(changeUsernameAsync.fulfilled, (state, action) => {
+        state.loading = false;
+        state.userProfile.userName = action.payload.userName;
+      })
+      .addCase(changeUsernameAsync.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       });
   },
 });
 
-// Exportez vos actions, y compris la thunk asynchrone
+// Export des actions et du slice Redux
 export const { loginUser, logoutUser, infoUser, infoUserName } = loginSlice.actions;
 
 export default loginSlice;
