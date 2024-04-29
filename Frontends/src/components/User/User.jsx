@@ -1,14 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import Account from "../Account/Account"; //Composant
+import Account from "../Account/Account"; // Composant
 import Button from "../Button/Button";
 
 const User = () => {
-  const username = useSelector(state => state.login.userProfile.userName);
+  const userProfile = useSelector(state => state.login.userProfile);
+  console.log("User profile:", userProfile); // Utilisation du sélecteur pour récupérer le profil utilisateur
   const navigate = useNavigate();
-
-  const handleDisplayEdit = (e) => {
-    e.preventDefault();
+console.log(userProfile);
+  const handleDisplayEdit = () => {
     navigate("/editUser");
   };
 
@@ -18,11 +18,12 @@ const User = () => {
         <h1>
           Welcome back
           <br />
-          {username}!
+          {userProfile ? userProfile.username : "User"}! {/* Affichage du nom d'utilisateur s'il est disponible */}
         </h1>
         <Button className="edit-button" btnText="Edit Name" onClick={handleDisplayEdit} />
       </div>
       <h2 className="sr-only">Accounts</h2>
+      
       {Account.map((account, index) => (
         <Account
           key={index} // Utilisation de l'index comme clé

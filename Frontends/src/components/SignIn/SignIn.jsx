@@ -1,38 +1,35 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import Button from "../Button/Button";
-import { loginUserAsync } from "../../redux/loginSlice";
+import { loginUserAsync, fetchUserProfileAsync } from "../../redux/loginSlice";
 
 const SignIn = () => {
   const [formData, setFormData] = useState({ email: "", password: "", staySignedIn: false });
-  const [error, setError] = useState("");
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handleChange = (e) => {
     const { name, value, checked } = e.target;
-    setFormData({ ...formData, [name]: value === "checkbox" ? checked : value });
+    setFormData({ ...formData, [name]: name === "staySignedIn" ? checked : value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      // Dispatch de l'action asynchrone pour la connexion de l'utilisateur
-      const userData = await dispatch(loginUserAsync(formData));
-      console.log(formData);
-      // Gestion de la réponse de l'action asynchrone
-      if (userData.payload.token) {
-        if (formData.staySignedIn) localStorage.setItem("token", userData.payload.token);
-        navigate("/user");
-      } else {
-        setError("Identifiants incorrects");
-      }
-    } catch (error) {
-      console.error("Erreur lors de la connexion:", error);
-      setError("Identifiants incorrects");
+    console.log("Login form data:", formData);
+    const userData = await dispatch(loginUserAsync(formData)); // Attend la résolution de loginUserAsync
+    console.log("User data after login:", userData);
+    if (userData.payload) {
+      const token = userData.payload.body.token; // Récupérer le token à partir des données de réponse
+      dispatch(fetchUserProfileAsync(token)); // Passer le token directement à fetchUserProfileAsync
+      console.log("Login successful");
+    } else {
+      // Gérer les erreurs de connexion ici
+      console.error("Login failed");
     }
   };
+  
+  
+  
+  
 
   return (
     <main className="main bg-dark">
@@ -48,7 +45,7 @@ const SignIn = () => {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              placeholder=" exemple@gmail.com"
+              placeholder=" example@gmail.com"
               required
             />
           </div>
@@ -67,7 +64,7 @@ const SignIn = () => {
             <input
               type="checkbox"
               id="remember-me"
-              name="rememberMe"
+              name="staySignedIn"
               checked={formData.staySignedIn}
               onChange={handleChange}
             />
@@ -75,7 +72,6 @@ const SignIn = () => {
           </div>
           <Button btnText={"Sign In"} className={"sign-in-button"} />
         </form>
-        {error && <p className="errorConexion">{error}</p>}
       </section>
     </main>
   );

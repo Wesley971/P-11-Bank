@@ -1,21 +1,25 @@
 // loginSlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { logUser, getUserProfile, changeUsername } from "../components/Api/Api";
+import { logUser, getUserProfile, changeUsername } from "../services/api.service";
 
+console.log(getUserProfile);
 // Thunk asynchrone pour la connexion de l'utilisateur
 export const loginUserAsync = createAsyncThunk(
   'login/loginUserAsync',
   async ({ email, password }) => {
     const userData = await logUser(email, password);
+    console.log(userData);
     return userData;
   }
+  
 );
 
 // Thunk asynchrone pour récupérer le profil utilisateur
 export const fetchUserProfileAsync = createAsyncThunk(
   'login/fetchUserProfileAsync',
   async (token) => {
-    const userProfile = await getUserProfile(token);
+    console.log("Fetching user profile with token:", token);
+    const userProfile = await getUserProfile(token);  
     return userProfile;
   }
 );
@@ -68,7 +72,8 @@ export const loginSlice = createSlice({
       })
       .addCase(loginUserAsync.fulfilled, (state, action) => {
         state.loading = false;
-        state.userToken = action.payload.token;
+        console.log("Login successful. Response data:", action.payload);
+        state.userToken = action.payload.body.token;
       })
       .addCase(loginUserAsync.rejected, (state, action) => {
         state.loading = false;
@@ -80,6 +85,7 @@ export const loginSlice = createSlice({
       })
       .addCase(fetchUserProfileAsync.fulfilled, (state, action) => {
         state.loading = false;
+        console.log(action);
         state.userProfile = action.payload;
       })
       .addCase(fetchUserProfileAsync.rejected, (state, action) => {
@@ -92,10 +98,12 @@ export const loginSlice = createSlice({
       })
       .addCase(changeUsernameAsync.fulfilled, (state, action) => {
         state.loading = false;
+        console.log("User profile retrieved successfully. Profile data:", action.payload);
         state.userProfile.userName = action.payload.userName;
       })
       .addCase(changeUsernameAsync.rejected, (state, action) => {
         state.loading = false;
+        console.log("Username changed successfully. Updated profile data:", action.payload);
         state.error = action.error.message;
       });
   },
