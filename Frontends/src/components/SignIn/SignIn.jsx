@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import Button from "../Button/Button";
 import { loginUserAsync, fetchUserProfileAsync } from "../../redux/loginSlice";
@@ -6,7 +7,7 @@ import { loginUserAsync, fetchUserProfileAsync } from "../../redux/loginSlice";
 const SignIn = () => {
   const [formData, setFormData] = useState({ email: "", password: "", staySignedIn: false });
   const dispatch = useDispatch();
-
+const navigate = useNavigate();
   const handleChange = (e) => {
     const { name, value, checked } = e.target;
     setFormData({ ...formData, [name]: name === "staySignedIn" ? checked : value });
@@ -21,6 +22,7 @@ const SignIn = () => {
       const token = userData.payload.body.token; // Récupérer le token à partir des données de réponse
       dispatch(fetchUserProfileAsync(token)); // Passer le token directement à fetchUserProfileAsync
       console.log("Login successful");
+      navigate("/user"); // Naviguer vers la page utilisateur après la connexion
     } else {
       // Gérer les erreurs de connexion ici
       console.error("Login failed");

@@ -15,7 +15,7 @@ export async function logUser(email, password) {
   // Fonction pour récupérer le profil utilisateur
   export async function getUserProfile(token) {
     const response = await fetch("http://localhost:3001/api/v1/user/profile", {
-      method: "GET",
+      method: "POST",
       headers: {
         "Authorization": `Bearer ${token}`,
       },
