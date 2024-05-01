@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { NavLink } from "react-router-dom";
+import { NavLink , useNavigate } from "react-router-dom";
 import { logoutUser, fetchUserProfileAsync } from "../../redux/loginSlice";
 
 import logo from "../../assets/images/argentBankLogo.png";
@@ -19,7 +19,12 @@ const Navigation = () => {
       dispatch(fetchUserProfileAsync(userToken));
     }
   }, [dispatch, userToken]);
-
+  const navigate = useNavigate();
+  const handleUser = (e) => {
+    e.preventDefault();
+    navigate("/user");
+  
+  }
   const handleLogout = () => {
     localStorage.removeItem("token");
     dispatch(logoutUser());
@@ -36,9 +41,9 @@ const Navigation = () => {
         
         
         {userToken && userProfile && (
-          <div className="userName">
+          <div className="userName" >
             <i className="fa fa-user-circle"></i>
-            <p>{firstName}</p>
+            <p onClick={handleUser} >{firstName}</p>
           </div>
         )}
 
