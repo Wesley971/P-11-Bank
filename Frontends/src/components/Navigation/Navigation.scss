@@ -3,11 +3,13 @@
     justify-content: center;
     align-items: center;
   }
+  //Modification du style de la font-weight
   .userName{
     display: flex;
     align-items: center;
     flex-direction: row;
     text-decoration: none;
+    font-weight: bold; 
     p{
       margin-right: 15px;
       &:hover{

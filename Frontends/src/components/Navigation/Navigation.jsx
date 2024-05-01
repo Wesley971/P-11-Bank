@@ -8,7 +8,9 @@ import { LuLogOut } from "react-icons/lu";
 
 const Navigation = () => {
   const dispatch = useDispatch();
-  const { userToken, userProfile} = useSelector((state) => state.login);
+  const { userToken} = useSelector((state) => state.login);
+  const userProfile = useSelector((state) => state.login.userProfile);
+  const { firstName } = userProfile.body;
 
   useEffect(() => {
     // Charge le profil utilisateur si un token est disponible
@@ -36,7 +38,7 @@ const Navigation = () => {
         {userToken && userProfile && (
           <div className="userName">
             <i className="fa fa-user-circle"></i>
-            <p>{userProfile.userName}</p>
+            <p>{firstName}</p>
           </div>
         )}
 
