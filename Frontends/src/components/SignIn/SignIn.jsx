@@ -8,6 +8,8 @@ const SignIn = () => {
   const [formData, setFormData] = useState({ email: "", password: "", staySignedIn: false });
   const dispatch = useDispatch();
 const navigate = useNavigate();
+
+
   const handleChange = (e) => {
     const { name, value, checked } = e.target;
     setFormData({ ...formData, [name]: name === "staySignedIn" ? checked : value });
@@ -19,7 +21,11 @@ const navigate = useNavigate();
     const userData = await dispatch(loginUserAsync(formData)); // Attend la résolution de loginUserAsync
     console.log("User data after login:", userData);
     if (userData.payload) {
-      const token = userData.payload.body.token; // Récupérer le token à partir des données de réponse
+      const token = userData.payload.body.token;
+      if (formData.staySignedIn) {
+        localStorage.setItem("token", token);
+      }
+       // Récupérer le token à partir des données de réponse
       dispatch(fetchUserProfileAsync(token)); // Passer le token directement à fetchUserProfileAsync
       console.log("Login successful");
       navigate("/user"); // Naviguer vers la page utilisateur après la connexion
