@@ -1,6 +1,6 @@
  import { useState } from "react";
  import Button from "../Button/Button";
- //import { useNavigate } from "react-router-dom";
+ import { useNavigate } from "react-router-dom";
 
  //Variable pour manipuler le store redux
  import { useSelector, useDispatch } from "react-redux";
@@ -9,7 +9,12 @@
  import { changeUsername } from "../../services/api.service";
 
  const EditName = () => {
-    //const navigate = useNavigate();
+    const navigate = useNavigate();
+    const handleUser = (e) => {
+      e.preventDefault();
+      navigate("/user");
+    
+    }
     // enregistrement de la slice login depuis le store dans une variable
     const login = useSelector((state) => state.login);
     const userProfile = login.userProfile;
@@ -68,7 +73,7 @@
             </div>
             <Button  btnText={"Save"} className={"sign-in-button"}/>
           </form>
-            <Button  btnText={"Cancel"} className={"sign-in-button"}/>
+            <Button  btnText={"Cancel"} className={"sign-in-button"} onClick={handleUser}/>
         </section>
         </main>
       );

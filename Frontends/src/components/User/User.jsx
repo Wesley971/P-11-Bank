@@ -11,7 +11,7 @@ const User = () => {
     e.preventDefault()
     navigate("/editUserName");
   };
-  const {firstName, lastName } = userProfile.body;
+  const { firstName, lastName } = userProfile && userProfile.body ? userProfile.body : { firstName: '', lastName: '' };
   return (
     <main className="main bg-dark2">
       <div className="header">

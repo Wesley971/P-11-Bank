@@ -10,7 +10,7 @@ const Navigation = () => {
   const dispatch = useDispatch();
   const { userToken} = useSelector((state) => state.login);
   const userProfile = useSelector((state) => state.login.userProfile);
-  const { firstName } = userProfile.body;
+  const firstName = userProfile ? userProfile.body.firstName : '';
 
   useEffect(() => {
     // Charge le profil utilisateur si un token est disponible
