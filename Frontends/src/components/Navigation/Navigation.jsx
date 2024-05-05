@@ -1,34 +1,39 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink , useNavigate } from "react-router-dom";
-import { logoutUser, fetchUserProfileAsync } from "../../redux/loginSlice";
+import { logoutUser, fetchUserProfileAsync, loginUser } from "../../redux/loginSlice";
 
 import logo from "../../assets/images/argentBankLogo.png";
 import { LuLogOut } from "react-icons/lu";
 
 const Navigation = () => {
   const dispatch = useDispatch();
-  const { userToken} = useSelector((state) => state.login);
+  const { userToken } = useSelector((state) => state.login);
   const userProfile = useSelector((state) => state.login.userProfile);
   const firstName = userProfile ? userProfile.body.firstName : '';
 
+  // Vérification de l'état de connexion au chargement de la page
   useEffect(() => {
-    // Charge le profil utilisateur si un token est disponible
-    if (userToken) {
-      // Utilise l'action asynchrone pour récupérer le profil de l'utilisateur
-      dispatch(fetchUserProfileAsync(userToken));
+    const token = localStorage.getItem("token");
+    if (token) {
+      // Si un token est trouvé dans le localStorage, connectez automatiquement l'utilisateur
+      dispatch(loginUser(token));
+      // Utilisez l'action asynchrone pour récupérer le profil de l'utilisateur
+      dispatch(fetchUserProfileAsync(token));
     }
-  }, [dispatch, userToken]);
+  }, [dispatch]);
+
   const navigate = useNavigate();
   const handleUser = (e) => {
     e.preventDefault();
     navigate("/user");
-  
-  }
+  };
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     dispatch(logoutUser());
   };
+
 
   return (
     <nav className="main-nav">

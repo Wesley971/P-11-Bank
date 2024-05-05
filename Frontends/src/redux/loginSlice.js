@@ -33,6 +33,7 @@ export const changeUsernameAsync = createAsyncThunk(
   }
 );
 
+
 // Définition du slice Redux
 export const loginSlice = createSlice({
   name: "login",
@@ -41,6 +42,7 @@ export const loginSlice = createSlice({
     userProfile: null,
     loading: false,
     error: null,
+    editingName: false
   },
   reducers: {
     // Action pour connecter l'utilisateur
@@ -62,6 +64,9 @@ export const loginSlice = createSlice({
       if (state.userProfil) {
         state.userProfil.userName = action.payload;
       }
+    },
+    toggleEditState: state => {
+      state.editingName = !state.editingName; // Inverse l'état d'édition
     },
   },
   extraReducers: (builder) => {
@@ -110,6 +115,6 @@ export const loginSlice = createSlice({
 });
 
 // Export des actions et du slice Redux
-export const { loginUser, logoutUser, infoUser, infoUserName } = loginSlice.actions;
+export const { loginUser, logoutUser, infoUser, infoUserName, toggleEditState } = loginSlice.actions;
 
 export default loginSlice;

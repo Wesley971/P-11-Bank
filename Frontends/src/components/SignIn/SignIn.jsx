@@ -25,7 +25,7 @@ const navigate = useNavigate();
       if (formData.staySignedIn) {
         localStorage.setItem("token", token);
       }
-       // Récupérer le token à partir des données de réponse
+       
       dispatch(fetchUserProfileAsync(token)); // Passer le token directement à fetchUserProfileAsync
       console.log("Login successful");
       navigate("/user"); // Naviguer vers la page utilisateur après la connexion

@@ -1,6 +1,6 @@
  import { useState } from "react";
  import Button from "../Button/Button";
- import { useNavigate } from "react-router-dom";
+  import { toggleEditState } from "../../redux/loginSlice";
 
  //Variable pour manipuler le store redux
  import { useSelector, useDispatch } from "react-redux";
@@ -9,16 +9,14 @@
  import { changeUsername } from "../../services/api.service";
 
  const EditName = () => {
-    const navigate = useNavigate();
-    const handleUser = (e) => {
-      e.preventDefault();
-      navigate("/user");
-    
-    }
+  const dispatch = useDispatch();
+
+  const handleCancel = () => {
+    dispatch(toggleEditState()); // Déclencher l'action pour annuler l'édition
+  };
     // enregistrement de la slice login depuis le store dans une variable
     const login = useSelector((state) => state.login);
     const userProfile = login.userProfile;
-    const dispatch = useDispatch(); // Utilise useDispatch
     // Initialisation de la variable avec le store par default et onChange pour récupérer la valeur de l'input
     const [newUserName, setNewUserName] = useState(userProfile.userName || "");
 
@@ -73,7 +71,7 @@
             </div>
             <Button  btnText={"Save"} className={"sign-in-button"}/>
           </form>
-            <Button  btnText={"Cancel"} className={"sign-in-button"} onClick={handleUser}/>
+            <Button  btnText={"Cancel"} className={"sign-in-button"} onClick={handleCancel}/>
         </section>
         </main>
       );
