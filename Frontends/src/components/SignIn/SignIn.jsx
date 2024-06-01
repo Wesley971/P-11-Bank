@@ -7,8 +7,7 @@ import { loginUserAsync, fetchUserProfileAsync } from "../../redux/loginSlice";
 const SignIn = () => {
   const [formData, setFormData] = useState({ email: "", password: "", staySignedIn: false });
   const dispatch = useDispatch();
-const navigate = useNavigate();
-
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value, checked } = e.target;
@@ -24,9 +23,11 @@ const navigate = useNavigate();
       const token = userData.payload.body.token;
       if (formData.staySignedIn) {
         localStorage.setItem("token", token);
+      } else {
+        sessionStorage.setItem("token", token);
       }
-       
-      dispatch(fetchUserProfileAsync(token)); // Passer le token directement à fetchUserProfileAsync
+
+      await dispatch(fetchUserProfileAsync(token)); // Attend la résolution de fetchUserProfileAsync
       console.log("Login successful");
       navigate("/user"); // Naviguer vers la page utilisateur après la connexion
     } else {
@@ -34,10 +35,6 @@ const navigate = useNavigate();
       console.error("Login failed");
     }
   };
-  
-  
-  
-  
 
   return (
     <main className="main bg-dark">
